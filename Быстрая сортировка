@@ -1,0 +1,73 @@
+#include "stdafx.h"
+#include <iostream>	
+#include <random>
+#include <ctime>
+#include "time.h"
+
+
+using namespace std;
+void QuickSort(int *a, long n);
+void Printfp(int *a, int n);
+
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+	srand(time(NULL));
+	int n;
+	cout << "Введите количество элементов:" << endl;
+	cin >> n;
+	int * a = new int[n];
+	for (int i = 0; i < n; i++)
+		a[i] = rand () % 10;
+	Printfp(a, n);
+	cout << endl;
+	double c = clock();
+	int length = 100000;
+	for (int i = 0; i < length; i++)
+	{
+		QuickSort(a, n);
+	}
+	cout << clock() - c << endl;
+	Printfp(a, n);
+	system("pause");
+	return 0;
+}
+
+void Printfp(int *a, int n)
+{
+	for (int i = 0; i < n; i++)
+		cout << a[i] << " ";
+}
+
+
+
+void QuickSort( int *a, long n)
+{
+	// На входе - массив a[], a[n] - его последний элемент.
+
+	long i = 0, j = n - 1; 		// поставить указатели на исходные места
+    int temp, p;
+
+	p = a[n >> 1];		// центральный элемент         // ВОПРОС
+
+						// процедура разделения
+	do 
+	{
+		while (a[i] < p) i++;
+		while (a[j] > p) j--;
+
+		if (i <= j)
+		{
+			temp = a[i];
+			a[i] = a[j]; 
+			a[j] = temp;
+			i++; j--;
+		}
+	}
+	while (i <= j);
+
+
+	// рекурсивные вызовы, если есть, что сортировать 
+	if (j > 0) QuickSort(a, j + 1);
+	if (n > i) QuickSort(a + i, n - i);
+}
