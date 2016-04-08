@@ -1,0 +1,72 @@
+#include "stdafx.h"
+#include <iostream>
+#include <ctime>
+#include "time.h"
+
+
+using namespace std;
+int QuickSort(int *a, int N);
+void Printfp(int *a, int n);
+long  AlgoEvklid(long a, long b);
+long BinaryAlgoEvklid(long a, long b);
+
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+	srand(time(NULL));
+	unsigned long long int a, b;
+	a = rand() % 100;
+	b = rand() % 100;
+	cout << a << " " << b << endl;
+	cout << "Наибольший общий делитель Бинарный Алгоритм Евклида  =" << BinaryAlgoEvklid(a, b) << endl;
+	cout << "Наибольший общий делитель Алгоритм Евклида =" << AlgoEvklid(a, b) << endl;
+	double c = clock();
+	int n = 100000;
+	for (int i = 0; i < n; i++)                          // Binary Algorithm Evklid
+		BinaryAlgoEvklid(a, b);
+	cout << clock() - c << endl;
+
+	double d = clock();
+	for (int i = 0; i < n; i++)                          // Algorithm Evklid
+		AlgoEvklid(a, b);
+	cout << clock() - d << endl;
+
+	system("pause");
+	return 0;
+}
+
+long  AlgoEvklid(long a, long b)
+{
+	while (a != 0 && b != 0)
+	{
+		if (a >= b)
+			a = a%b;
+		else
+			b = b%a;
+	}
+	return a+b;
+}
+
+long BinaryAlgoEvklid(long a, long b)
+{
+	long deg = 0;
+	if (a == 0 || b == 0) return a | b;                //логическое ИЛИ
+	while (((a | b) & 1) == 0)                         // логическое И
+	{
+		deg++;
+		a >>= 1;
+		b >>= 1;
+	}
+	while (a && b)
+	{
+		if (b & 1)
+			while ((a & 1) == 0) a >>= 1;
+		else
+			while ((b & 1) == 0) b >>= 1;
+		if (a > b)
+			a = (a - b) >> 1;        // (a - b)/2
+		else
+			b = (b - a) >> 1;		// (b - a)/2
+	}
+	return((a | b) << deg);
+}
