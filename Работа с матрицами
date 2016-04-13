@@ -1,0 +1,120 @@
+#include "stdafx.h"
+#include <iostream>
+#include <iomanip>
+#include <ctime>
+
+using namespace std;
+
+class Matrix	
+{
+
+	int n , m;
+	int **a;
+public:
+	
+	Matrix (int n , int m)              //constructor
+	{
+		srand(time(NULL));
+		if (n > 0 && m > 0)
+		{
+		this -> n = n;
+		this -> m = m;
+			a = new int *[n];
+			for ( int i = 0; i < n; i++)
+			a[i] = new int [m];
+		for ( int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				a[i][j] =  rand() % 10;
+		}
+		else
+			throw 1;
+	}
+		Matrix (const Matrix & ob)                         //constructor x2
+	{
+		cout << "constructor" << endl;
+		this -> n = ob.n;
+		this -> m = ob.m;
+			a = new int *[n];
+			for ( int i = 0; i < n; i++)
+			a[i] = new int [m];
+		for ( int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				a[i][j] =  ob.a[i][j];
+	}
+	void Print()                                      //print matrix
+	{
+		for ( int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < m; j++)
+				cout << setw(3) << a[i][j];
+			cout << endl;
+		}
+	}
+
+	~Matrix ()                                       //destructor
+	{
+		cout << "destructor" << endl;
+		for ( int i = 0; i < n; i ++)
+			delete [] a[i];
+		delete [] a;
+	}
+
+	Matrix operator+(Matrix ob)                        //addition
+	{
+		if ( m != ob.m || n != ob.n)
+			throw 2;
+		Matrix res(m,n);
+		for (int i=0; i < n; i++)
+			for (int j = 0; j < m; j++)
+				res.a[i][j]= a[i][j] +ob.a[i][j];
+		return res;
+	}
+	Matrix& operator = (const Matrix &ob)
+	{
+		if (n != ob.n || m != ob.m)
+		{
+			for (int i = 0; i < n; i++)
+				delete [] a[i];
+			delete a;
+			m = ob.m;
+			n = ob.n;
+			a = new int *[n];
+			for ( int i = 0; i < n; i++)
+			a[i] = new int [m];
+		}
+			for ( int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				a[i][j] =  ob.a[i][j];
+			return *this;
+	}
+};
+
+int main ()
+{
+	try 
+	{
+		Matrix a(2, 2);
+	    a.Print();
+		cout << endl;
+		Matrix b(2, 2);
+		b.Print();
+		Matrix res = a+b;
+		res.Print();
+		cout << endl;
+		Matrix c(2, 2);
+		c.Print();
+		res = a+c;
+		res.Print();
+		cout <<endl;
+
+	}
+	catch (int i)
+	{
+		if ( i == 1)
+			cout << "Error dimension" << endl;
+		if ( i == 2)
+			cout << "Error addition" << endl;
+	}
+
+	system("pause");
+}
