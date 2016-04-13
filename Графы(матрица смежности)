@@ -1,0 +1,88 @@
+//Графы
+//программа создает и выводит матрицу смежности
+
+#include "stdafx.h"
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
+class graph ;
+istream & operator >> (istream &cin, graph &g);
+ostream & operator << (ostream &cin, graph &g);
+
+
+class graph 
+{
+	friend istream & operator >> (istream &cin, graph &g);
+	friend ostream & operator << (ostream &cin, graph &g);
+	int n;
+	int **a;
+public:
+	graph (int n)
+	{
+		this-> n = n;
+			a = new int *[n];
+			for ( int i = 0; i < n; i++)
+			a[i] = new int [n];
+		for ( int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < n; j++)
+				a[i][j] = 0;
+		}
+	}
+	~graph ()
+	{
+		for ( int i = 0; i < n; i ++)
+			delete [] a[i];
+		delete [] a;
+	}
+};
+
+istream & operator >> (istream &cin, graph &g)
+{
+	int m;
+	cout << "Введите количество ребер";
+	cin >> m;
+	for (int i = 0; i < m; i++ )
+	{
+		int a, b;
+		cout << "Введите вершины" ;
+		cin >> a >> b;
+		a--; b--;
+		if (a >= 0 && a < g.n && b >= 0 && b < g.n && a!=b)
+		{ 
+			g.a[a][b] = 1;
+			g.a[b][a] = 1;
+		}
+	}
+	return cin;
+}
+
+ostream & operator << (ostream &cout, graph &g)
+{
+	for (int i = 0; i < g.n; i++ )
+	{
+		for (int j = 0; j < g.n; j++ )
+			cout << setw(3) << g.a[i][j];
+		cout << endl;
+	}
+	return cout;
+}
+
+int Usl()
+{
+	return 0;
+}
+
+int main()
+{
+	setlocale(LC_ALL, "russian");
+	int l;
+	cin >> l;
+	graph g(l);
+	cin >> g;
+	cout << g;
+	system("pause");
+}
+
