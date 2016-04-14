@@ -1,0 +1,74 @@
+#include "stdafx.h"
+#include <iostream>
+#include <ctime>
+
+using namespace std;
+
+template <class Item> class Sort
+{
+	friend void dSort(Item a[], int left, int right);
+public:
+	Sort(Item Mas[], int left, int right, int medium)
+	{
+		int j = left;
+		int k = medium + 1;
+		int count = right - left + 1;
+		if (count <= 1) return;
+		Item *TmpMas = new Item[count];
+
+		for (int i = 0; i < count; ++i)
+		{
+			if (j <= medium && k <= right)
+			{
+				if (Mas[j] < Mas[k])
+					TmpMas[i] = Mas[j++];
+				else
+					TmpMas[i] = Mas[k++];
+			}
+			else
+			{
+				if (j <= medium)
+					TmpMas[i] = Mas[j++];
+				else
+					TmpMas[i] = Mas[k++];
+			}
+		}
+
+		j = 0;
+		for (int i = left; i <= right; ++i)
+		{
+			Mas[i] = TmpMas[j++];
+		}
+		delete[] TmpMas;
+	}
+
+};
+
+template <typename Item>
+void dSort(Item a[], int left, int right)
+{
+	int medium;
+	// Условие выхода из рекурсии
+	if (left >= right) return;
+	medium = (left + right) / 2;
+	// Рекурсивная сортировка полученных массивов
+	dSort(a, left, medium);
+	dSort(a, medium + 1, right);
+	Sort<int>(a, left, right, medium);
+};
+
+
+int main()
+{
+	srand(time(NULL));
+	int n = 10;
+	int *a = new int [n];
+	for (int i = 0; i < n; i++)
+		a[i] = rand() % 10;
+	for (int i = 0; i < n; i++)
+		cout << a[i];
+	dSort (a, 0, 10);
+	for (int i = 0; i < n; i++)
+		cout << a[i];
+	system("pause");
+}
