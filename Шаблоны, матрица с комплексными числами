@@ -1,0 +1,244 @@
+#include "stdafx.h"
+#include <iostream>
+#include <iomanip>
+#include <ctime>
+
+using namespace std;
+
+template <class T> class Matrix	
+{
+	friend int main ();
+	template <class T> friend ostream& operator <<(ostream& out, Matrix<T>& ob);
+	int n , m;
+	T **a;
+public:
+	
+	Matrix (int n , int m)              //constructor
+	{
+		srand(time(NULL));
+		if (n > 0 && m > 0)
+		{
+		this -> n = n;
+		this -> m = m;
+			a = new T *[n];
+			for ( int i = 0; i < n; i++)
+			a[i] = new T [m];
+		for ( int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				a[i][j] =  rand() % 10;
+		}
+		else
+			throw 1;
+	}
+		Matrix (const Matrix & ob)                         //constructor x2
+	{
+		cout << "constructor" << endl;
+		this -> n = ob.n;
+		this -> m = ob.m;
+			a = new T *[n];
+			for ( int i = 0; i < n; i++)
+			a[i] = new T [m];
+		for ( int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				a[i][j] =  ob.a[i][j];
+	}
+	void Print()                                      //print matrix
+	{
+		for ( int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < m; j++)
+				cout << setw(3) << a[i][j];
+			cout << endl;
+		}
+	}
+
+	~Matrix ()                                       //destructor
+	{
+		cout << "destructor" << endl;
+		for ( int i = 0; i < n; i ++)
+			delete [] a[i];
+		delete [] a;
+	}
+
+	Matrix<T> operator + (Matrix<T> ob)                        //addition
+	{
+		if ( m != ob.m || n != ob.n)
+			throw 2;
+		Matrix<T> res(m,n);
+		for (int i=0; i < n; i++)
+			for (int j = 0; j < m; j++)
+				res.a[i][j]= a[i][j] +ob.a[i][j];
+		return res;
+	}
+	Matrix<T>& operator = (const Matrix<T> &ob)
+	{
+		if (n != ob.n || m != ob.m)
+		{
+			for (int i = 0; i < n; i++)
+				delete [] a[i];
+			delete a;
+			m = ob.m;
+			n = ob.n;
+			a = new T *[n];
+			for ( int i = 0; i < n; i++)
+			a[i] = new T [m];
+		}
+			for ( int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				a[i][j] =  ob.a[i][j];
+			return *this;
+	}
+};
+
+template <class T> ostream& operator <<(ostream& out, Matrix<T>& ob)
+{
+	for ( int i = 0; i < ob.n; i++)
+		{
+			for (int j = 0; j < ob.m; j++)
+				out << setw(3) << ob.a[i][j];
+			out << endl;
+		}
+	return out;
+}
+
+class Complex
+{
+    double re, im; 
+public:
+ 
+    Complex() {};
+    Complex (double r)
+    {
+        re = r; 
+        im = 0;
+    }
+    Complex (double r, double i)
+    {
+        re = r; 
+        im = i;
+    } 
+    Complex (Complex &c)
+    {
+        re = c.re; 
+        im = c.im;
+    }
+	~Complex() {}
+    float abs() 
+    {
+        return sqrt(re * re - im * im);
+    }     
+ 
+    Complex operator = (Complex c) // перегрузка оператора присваивания
+    {
+        re = c.re;
+        im = c.im;
+        return *this;
+    }
+ 
+    Complex operator + (Complex &c) // перегрузка оператора сложения
+    {
+        Complex temp;
+ 
+        temp.re = re + c.re;
+        temp.im = im + c.re;
+ 
+        return temp;
+    }
+ 
+    Complex operator - (Complex &c) // перегрузка оператора вычитания
+    {
+        Complex temp;
+ 
+        temp.re = re - c.re;
+        temp.im = im - c.re;
+ 
+        return temp;
+    }
+ 
+    Complex operator * (Complex &c) // перегрузка оператора умножения
+    {
+        Complex temp;
+ 
+        temp.re = re*c.re;
+        temp.im = re*c.im;
+ 
+        return temp;
+    }
+ 
+    Complex operator / (Complex &c) // перегрузка оператора деления
+    {
+        Complex temp;
+ 
+        double r = c.re * c.re + c.im * c.im;
+        temp.re = (re * c.re + im * c.im) / r;
+        temp.re = (im * c.re - re * c.im) / r;
+ 
+        return temp;
+    }   
+ 
+    friend ostream &operator<<(ostream &, const Complex &);
+    friend istream &operator>>(istream &, const Complex &);
+};
+ 
+ostream &operator<<(ostream &out, const Complex &c)
+{
+    out << c.re;
+    if( c.im > 0 )
+        out << "+";
+    out << c.im << "i";
+ 
+    return out;
+}
+ 
+istream &operator>>(istream &in, const Complex &c)
+{
+    in >> c.re >> c.im;
+ 
+    return in;
+}
+
+int main ()
+{
+	try 
+	{
+		Matrix<Complex> a(2, 2);
+		cout << a;
+	    //a.Print();
+		cout << endl;
+		Matrix<Complex> b(2, 2);
+		cout << b;
+		//b.Print();
+		Matrix<Complex> res = a+b;
+		cout << res;
+		//res.Print();
+		cout << endl;
+		Matrix<Complex> c(2, 2);
+		cout << c;
+		//c.Print();
+		res = a+c;
+		cout << res;
+		//res.Print();
+		cout <<endl;
+		// ________________________________________
+		 Complex value1(5,2);
+		 Complex value2(3,-3);
+
+		 cout << value1 << "; " << value2 << endl;
+		 cout << value1 + value2 << endl;
+		 cout << value1 - value2 << endl;
+		 cout << value1 * value2 << endl;
+		 cout << value1 / value2 << endl;    
+		 value1 = value2;
+		 cout << value1 << " = " << value2 << endl;
+	}
+	catch (int i)
+	{
+		if ( i == 1)
+			cout << "Error dimension" << endl;
+		if ( i == 2)
+			cout << "Error addition" << endl;
+	}
+
+	system("pause");
+	return 1;
+}
