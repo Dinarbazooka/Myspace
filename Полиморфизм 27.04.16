@@ -1,0 +1,164 @@
+// Полиморфизм.cpp: определяет точку входа для консольного приложения.
+//
+
+#include "stdafx.h"
+#include <iostream>
+#include <ctime>
+using namespace std;
+class Graph1;
+class Graph2;
+class Graph
+{
+protected:
+	int n;
+	int m;
+public:
+	Graph(int n, int m)
+	{
+		this->n = n;
+		this->m = m;
+	}
+	
+	virtual void Input() = 0;
+	virtual void Print() = 0;
+	static Graph* CreateGraph(int n, int m)
+	{
+		if (rand() % 2 == 0)
+			return new Graph1(n);
+		else
+			return new Graph2(n, m);
+	}
+};
+class Graph1 : public Graph
+{
+protected:
+	int ** a;
+public:
+	Graph1(int n) : Graph(n, 0)
+	{		
+		CreateMatrix();
+	}
+private: 
+	void CreateMatrix()
+	{
+		cout << "Graph 1 CreateMatrix" << endl;
+		a = new int *[n];
+		for (int i = 0; i < n; i++)
+		{
+			a[i] = new int[n];
+			for (int j = 0; j < n; j++)
+				a[i][j] = 0;
+		}
+	}
+public:
+	void Input()
+	{ 
+		cout << "graph 1" << endl;
+		for (int i = 0; i < n ; i++)
+		{
+			for (int j = i + 1; j < n; j++)
+			{
+				cin >> a[i][j];
+				a[j][i] = a[i][j];
+			}
+		}
+	}
+	void Print()
+	{
+		cout << "graph 1" << endl;
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < n; j++)
+				cout << a[i][j] << " ";
+			cout << endl;
+		}
+	}
+
+};
+
+class Graph2 :public Graph
+{
+protected:
+	int ** a;
+public:
+	Graph2(int n, int m):Graph(n, m)
+	{
+		this->m = m;
+		CreateMatrix();
+	}
+private: 
+	void CreateMatrix()
+	{
+		cout << "Graph 2 CreateMatrix" << endl;
+		a = new int*[2];
+		for (int i = 0; i < 2; i++)
+		{
+			a[i] = new int[m];
+			for (int j = 0; j < m; j++)
+				a[i][j] = 0;
+		}
+	}
+public:
+	void Input()
+	{
+		cout << "graph 2" << endl;
+		for (int j = 0; j < m; j++)
+		{
+			for (int i = 0; i < 2; i++)
+				cin >> a[i][j];
+		}
+	}
+	void Print()
+	{
+		cout << "graph 2" << endl;
+		for (int i = 0; i < 2; i++)
+		{
+			for (int j = 0; j < m; j++)
+				cout << a[i][j] << " " ;
+			cout << endl;
+		}
+	}
+
+};
+
+
+int main()
+{
+	/*Graph1 gr(4);
+	gr.Input();
+	gr.Print();
+	system("pause");
+	*/
+	/*Graph2 gr2(4,3);
+	gr2.Input();
+	gr2.Print();
+	system("pause");
+	*/
+	/*Graph* gr2 = new Graph1(4);
+	gr2->Input();
+	gr2->Print();
+	delete gr2;
+	system("pause");
+	*/
+	/*Graph* gr2 = new Graph2(4,3);
+	gr2->Input();
+	gr2->Print();
+	delete gr2;
+	system("pause");
+	*/
+	/*Graph* gr2 = new Graph(4, 3);
+	gr2->Input();
+	gr2->Print();
+	delete gr2;
+	system("pause");
+	*/
+
+	srand(time(NULL));
+	//Graph* gr2 = new Graph2(4, 3);
+	Graph* gr2 = Graph.CreateGraph(4, 3);
+	gr2->Input();
+	gr2->Print();
+	delete gr2;
+	system("pause");
+}
+
